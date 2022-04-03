@@ -15,12 +15,19 @@
 #include <stdio.h> 
 #include <string.h>
 
+#define IP_SERV_ADDR "192.168.0.39"
 
 Server::Server(std::string ip, int port){
     SERVER_IP = ip;
     PORT = port;
     len = sizeof(client);
-    CHAR_IP = SERVER_IP.c_str();
+    CHAR_IP = const_cast<char*>(SERVER_IP.c_str());
+
+    buff_tx = (Data *) malloc(sizeof(Data));
+    buff_rx = (Data *) malloc(sizeof(Data));
+
+    buff_tx->a = 12;
+    buff_tx->b = 'l';
 
     /* socket creation */
     sockfd = socket(AF_INET, SOCK_STREAM, 0);
@@ -62,7 +69,7 @@ void Server::start(){
         else {              
             while(1) { /* read data from a client socket till it is closed */
                 /* read client message, copy it into buffer */
-                len_rx = read(connfd, buff_rx, sizeof(buff_rx));  
+                len_rx = read(connfd, buff_rx, sizeof(Data)-1);  
                 
                 if(len_rx == -1) {
                     fprintf(stderr, "[SERVER-error]: connfd cannot be read. %d: %s \n", errno, strerror( errno ));
@@ -73,8 +80,8 @@ void Server::start(){
                     break; 
                 }
                 else {
-                    write(connfd, buff_tx, strlen(buff_tx));
-                    printf("[SERVER]: %s \n", buff_rx);
+                    write(connfd, buff_tx, sizeof(Data)-1);
+                    printf("[SERVER]: %s \n", buff_rx->b);
                 }
             }            
         }  

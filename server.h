@@ -1,6 +1,8 @@
 #ifndef SERVER_H
 #define SERVER_H
 
+#include "dataStruct.cpp"
+
 /*standard symbols */
 #include <unistd.h>  
 
@@ -31,8 +33,8 @@ class Server{
         struct sockaddr_in servaddr, client;
         
         int  len_rx, len_tx = 0;
-        char buff_tx[BUFF_SIZE] = "Hello client, I am the server";
-        char buff_rx[BUFF_SIZE];
+        Data* buff_tx;
+        Data* buff_rx;
     
     public:
         Server(std::string ip, int port);

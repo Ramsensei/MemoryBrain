@@ -1,62 +1,60 @@
+#include "client.h"
+
+/*standard symbols */
+#include <unistd.h>  
+
+/* sockets */
 #include <netdb.h> 
-#include <stdio.h> 
-#include <stdlib.h> 
-#include <string.h> 
+#include <netinet/in.h> 
 #include <sys/socket.h> 
-#include <unistd.h>
-#include <netinet/in.h>
-#include <arpa/inet.h> 
-#include <unistd.h>
+#include <sys/types.h> 
+#include <arpa/inet.h>
 
-#define SERVER_ADDRESS  "192.168.0.21"     /* server IP */
-#define PORT            8080 
+/* strings / errors*/
+#include <errno.h>
+#include <stdio.h> 
+#include <string.h>
 
-/* Test sequences */
-char buf_tx[] = "Hello server. I am a client";      
-char buf_rx[100];                     /* receive buffer */
- 
- 
-/* This clients connects, sends a text and disconnects */
-int main() 
-{ 
-    int sockfd; 
-    struct sockaddr_in servaddr; 
-    
-    /* Socket creation */
-    sockfd = socket(AF_INET, SOCK_STREAM, 0); 
-    if (sockfd == -1) 
-    { 
-        printf("CLIENT: socket creation failed...\n"); 
-        return -1;  
-    } 
-    else
-    {
-        printf("CLIENT: Socket successfully created..\n"); 
-    }
-    
-    
+
+Client::Client(std::string ip, int port) {
+    SERVER_IP = ip;
+    PORT = port;
+    CHAR_IP = const_cast<char*>(SERVER_IP.c_str());
+    buff_rx = (Data *) malloc(sizeof(Data));
+    buff_tx = (Data *) malloc(sizeof(Data));
+    buff_tx->a = 2;
+    buff_tx->b = 'b';
+
+    /* socket creation */
+    sockfd = socket(AF_INET, SOCK_STREAM, 0);
+    if (sockfd == -1) {
+        fprintf(stderr, "[CLIENT-error]: socket creation failed. %d: %s \n", errno, strerror( errno ));
+        return; 
+    } else printf("[CLIENT]: Socket successfully created..\n");
+
+    /* clear structure */
     memset(&servaddr, 0, sizeof(servaddr));
-
-    /* assign IP, PORT */
-    servaddr.sin_family = AF_INET; 
-    servaddr.sin_addr.s_addr = inet_addr( SERVER_ADDRESS ); 
-    servaddr.sin_port = htons(PORT); 
   
-    /* try to connect the client socket to server socket */
-    if (connect(sockfd, (struct sockaddr*)&servaddr, sizeof(servaddr)) != 0) 
-    { 
+    /* assign IP, SERV_PORT, IPV4 */
+    servaddr.sin_family      = AF_INET; 
+    servaddr.sin_addr.s_addr = inet_addr(CHAR_IP);
+    servaddr.sin_port        = htons(PORT);
+}
+
+void Client::sendMessage(){
+    if (connect(sockfd, (struct sockaddr*)&servaddr, sizeof(servaddr)) != 0) { 
         printf("connection with the server failed...\n");  
-        return -1;
+        return;
     } 
     
     printf("connected to the server..\n"); 
   
     /* send test sequences*/
-    write(sockfd, buf_tx, sizeof(buf_tx));     
-    read(sockfd, buf_rx, sizeof(buf_rx));
-    printf("CLIENT:Received: %s \n", buf_rx);
-   
+    write(sockfd, buff_tx, sizeof(Data)-1);     
+    read(sockfd, buff_rx, sizeof(Data)-1);
+    printf("CLIENT:Received: %s \n", buff_rx->b);
+    
        
     /* close the socket */
-    close(sockfd); 
-} 
+    close(sockfd);
+}
