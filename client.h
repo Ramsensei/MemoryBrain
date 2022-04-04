@@ -33,6 +33,7 @@ private:
     Data* buff_rx;
 public:
     Client(std::string ip, int port);
+    void setMessage();
     void sendMessage();
 };
 

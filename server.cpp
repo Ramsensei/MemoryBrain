@@ -69,7 +69,7 @@ void Server::start(){
         else {              
             while(1) { /* read data from a client socket till it is closed */
                 /* read client message, copy it into buffer */
-                len_rx = read(connfd, buff_rx, sizeof(Data)-1);  
+                len_rx = read(connfd, buff_rx, sizeof(buff_rx));  
                 
                 if(len_rx == -1) {
                     fprintf(stderr, "[SERVER-error]: connfd cannot be read. %d: %s \n", errno, strerror( errno ));
@@ -80,8 +80,8 @@ void Server::start(){
                     break; 
                 }
                 else {
-                    write(connfd, buff_tx, sizeof(Data)-1);
-                    printf("[SERVER]: %s \n", buff_rx->b);
+                    write(connfd, buff_tx, sizeof(buff_tx));
+                    printf("[SERVER]: %c \n", buff_rx->b);
                 }
             }            
         }  

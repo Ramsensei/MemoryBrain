@@ -50,9 +50,9 @@ void Client::sendMessage(){
     printf("connected to the server..\n"); 
   
     /* send test sequences*/
-    write(sockfd, buff_tx, sizeof(Data)-1);     
-    read(sockfd, buff_rx, sizeof(Data)-1);
-    printf("CLIENT:Received: %s \n", buff_rx->b);
+    write(sockfd, buff_tx, sizeof(buff_tx));     
+    read(sockfd, buff_rx, sizeof(buff_rx));
+    printf("CLIENT:Received: %c \n", buff_rx->b);
     
        
     /* close the socket */
