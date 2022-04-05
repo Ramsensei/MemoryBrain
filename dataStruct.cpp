@@ -1,6 +1,6 @@
+#include <wx/wx.h>
 
 struct Data
 {
-    int a;
-    char b;
+    wxBitmap img;
 };

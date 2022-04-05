@@ -26,8 +26,7 @@ Server::Server(std::string ip, int port){
     buff_tx = (Data *) malloc(sizeof(Data));
     buff_rx = (Data *) malloc(sizeof(Data));
 
-    buff_tx->a = 12;
-    buff_tx->b = 'l';
+    buff_tx->img = 'c';
 
     /* socket creation */
     sockfd = socket(AF_INET, SOCK_STREAM, 0);
@@ -81,7 +80,7 @@ void Server::start(){
                 }
                 else {
                     write(connfd, buff_tx, sizeof(buff_tx));
-                    printf("[SERVER]: %c \n", buff_rx->b);
+                    printf("[SERVER]: %c \n", buff_rx->img);
                 }
             }            
         }  
