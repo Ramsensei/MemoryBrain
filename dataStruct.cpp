@@ -1,6 +1,11 @@
 #include <wx/wx.h>
+#include <string>
 
+struct preData
+{
+    int data;
+};
 struct Data
 {
-    wxBitmap img;
+    std::string control;
 };

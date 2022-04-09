@@ -30,12 +30,14 @@ private:
     
     int  len_rx, len_tx = 0;
 public:
-    Data* buff_tx;
+    preData* packSize;
+    preData* buff_tx;
     Data* buff_rx;
     
     Client(std::string ip, int port);
     void setMessage();
     void sendMessage();
+    void setSize();
 };
 
 #endif

@@ -12,14 +12,16 @@ GUI::GUI(const wxString& title)
     Connect(ID_BTNIMG, wxEVT_COMMAND_BUTTON_CLICKED, 
         wxCommandEventHandler(GUI::changeImg));
     
+    char array[1024] = "Hola";
     std::string ip = "192.168.0.39";
     client = new Client(ip, 8080);
     Centre();
 }
 
 void GUI::changeImg(wxCommandEvent & event){
-    client->sendMessage();
-    fprintf(stdout, "Mensaje en gui: %c \n", client->buff_rx->img);
+    client->setSize();
+    // client->sendMessage();
+    fprintf(stdout, "Mensaje en gui: %d \n", client->packSize->data);
     // btnImg->SetBitmapLabel(client->buff_rx->img);
     
 }

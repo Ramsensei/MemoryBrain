@@ -34,7 +34,8 @@ class Server{
         
         int  len_rx, len_tx = 0;
         Data* buff_tx;
-        Data* buff_rx;
+        preData* buff_rx;
+        preData* packSize;
     
     public:
         Server(std::string ip, int port);

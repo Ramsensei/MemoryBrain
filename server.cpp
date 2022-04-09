@@ -24,9 +24,10 @@ Server::Server(std::string ip, int port){
     CHAR_IP = const_cast<char*>(SERVER_IP.c_str());
 
     buff_tx = (Data *) malloc(sizeof(Data));
-    buff_rx = (Data *) malloc(sizeof(Data));
+    buff_rx = (preData *) malloc(sizeof(preData));
+    packSize = (preData *)malloc(sizeof(preData));
 
-    buff_tx->img = 'c';
+    buff_tx->control = "Datos";
 
     /* socket creation */
     sockfd = socket(AF_INET, SOCK_STREAM, 0);
@@ -75,14 +76,20 @@ void Server::start(){
                 }
                 else if(len_rx == 0) { /* if length is 0 client socket closed, then exit */
                     printf("[SERVER]: client socket closed \n\n");
-                    close(connfd);
                     break; 
                 }
                 else {
-                    write(connfd, buff_tx, sizeof(buff_tx));
-                    printf("[SERVER]: %c \n", buff_rx->img);
+                    if (buff_rx->data == 0){
+                        packSize->data = sizeof(buff_tx);
+                        write(sockfd, packSize, sizeof(packSize));
+                        printf("Envio de tamaño \n");
+                    }
+                    else if(buff_rx->data == 1){
+                        write(sockfd, buff_tx, sizeof(buff_tx));
+                    }
                 }
-            }            
+            }
+            close(connfd);          
         }  
     }
 }
