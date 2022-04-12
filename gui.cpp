@@ -12,8 +12,7 @@ GUI::GUI(const wxString& title)
     Connect(ID_BTNIMG, wxEVT_COMMAND_BUTTON_CLICKED, 
         wxCommandEventHandler(GUI::changeImg));
     
-    char array[1024] = "Hola";
-    std::string ip = "192.168.0.39";
+    std::string ip = "192.168.0.15";
     client = new Client(ip, 8080);
     Centre();
 }
