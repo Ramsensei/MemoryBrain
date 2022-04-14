@@ -33,7 +33,7 @@ class Server{
         struct sockaddr_in servaddr, client;
         
         int  len_rx, len_tx = 0;
-        Data* buff_tx;
+        Data buff_tx;
         preData* buff_rx;
         preData* packSize;
     

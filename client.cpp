@@ -1,4 +1,5 @@
 #include "client.h"
+#include "image.cpp"
 
 /*standard symbols */
 #include <unistd.h>
@@ -20,13 +21,13 @@ Client::Client(std::string ip, int port)
     SERVER_IP = ip;
     PORT = port;
     CHAR_IP = const_cast<char *>(SERVER_IP.c_str());
-    buff_rx = (Data *)malloc(sizeof(Data));
+    buff_rx = Data();
     buff_tx = (preData *)malloc(sizeof(preData));
     packSize = (preData *)malloc(sizeof(preData));
     packSize->data = 0;
 }
 
-void Client::sendMessage()
+void Client::getImage()
 {
     /* socket creation */
     sockfd = socket(AF_INET, SOCK_STREAM, 0);
@@ -57,9 +58,15 @@ void Client::sendMessage()
     buff_tx->data = 1;
     /* send test sequences*/
     write(sockfd, buff_tx, sizeof(buff_tx));
-    printf("Despues write \n");
-    len_rx = read(sockfd, buff_rx, packSize->data);
-    printf("Despues read \n");
+    char* temp = (char*)malloc(sizeof(char) * packSize->data);
+    len_rx = read(sockfd, temp, packSize->data);
+    printf("----------------------Inicio do pacote----------------------\n");
+    for(int i = 0; i < len_rx; i++){
+        buff_rx.control.push_back(*(temp+i));
+    }
+    std::cout << "Control: " << buff_rx.control << std::endl;
+    printf("\n");
+    printf("----------------------Fim do pacote----------------------\n");
 
     if (len_rx == -1)
     {
@@ -71,7 +78,11 @@ void Client::sendMessage()
     }
     else
     {
-        // fprintf(stdout, "Mensaje recibido: %c \n", buff_rx->img);
+        // fprintf(stdout, "Mensaje recibido: %s \n", buff_rx.control);
+        image* img = new image();
+        img->decodeImage(buff_rx.control);
+        delete img;
+        img = nullptr;
     }
 
     
@@ -80,7 +91,7 @@ void Client::sendMessage()
     close(sockfd);
 }
 
-void Client::setSize()
+void Client::getSize()
 {
     /* socket creation */
     sockfd = socket(AF_INET, SOCK_STREAM, 0);
@@ -131,4 +142,8 @@ void Client::setSize()
 
     /* close the socket */
     close(sockfd);
+}
+
+void Client::setMessage(int message){
+    buff_tx->value = message;
 }

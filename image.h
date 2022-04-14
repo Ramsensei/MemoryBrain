@@ -10,6 +10,7 @@ public:
     image();
     int encodeImage(std::string picture);
     int decodeImage();
+    int decodeImage(std::string picture);
 };
 
 #endif

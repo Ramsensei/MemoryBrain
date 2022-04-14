@@ -1,4 +1,5 @@
 #include "server.h"
+#include "image.cpp"
 
 /*standard symbols */
 #include <unistd.h>  
@@ -23,11 +24,9 @@ Server::Server(std::string ip, int port){
     len = sizeof(client);
     CHAR_IP = const_cast<char*>(SERVER_IP.c_str());
 
-    buff_tx = (Data *) malloc(sizeof(Data));
+    buff_tx = Data();
     buff_rx = (preData *) malloc(sizeof(preData));
     packSize = (preData *)malloc(sizeof(preData));
-
-    buff_tx->control = "Datos";
 
     /* socket creation */
     sockfd = socket(AF_INET, SOCK_STREAM, 0);
@@ -69,7 +68,8 @@ void Server::start(){
         else {              
             while(1) { /* read data from a client socket till it is closed */
                 /* read client message, copy it into buffer */
-                len_rx = read(connfd, buff_rx, sizeof(buff_rx));  
+                len_rx = read(connfd, buff_rx, sizeof(buff_rx));
+                
                 
                 if(len_rx == -1) {
                     fprintf(stderr, "[SERVER-error]: connfd cannot be read. %d: %s \n", errno, strerror( errno ));
@@ -80,12 +80,21 @@ void Server::start(){
                 }
                 else {
                     if (buff_rx->data == 0){
-                        packSize->data = sizeof(buff_tx);
-                        write(sockfd, packSize, sizeof(packSize));
+                        printf("op 1 \n");
+                        image* img = new image();
+                        std::string path = "assets/" + std::to_string(buff_rx->value) + ".png";
+                        img->encodeImage(path);
+                        buff_tx.control = img->img;
+                        delete img;
+                        img = nullptr;
+                        packSize->data = buff_tx.control.size();
+                        write(connfd, packSize, sizeof(packSize));
                         printf("Envio de tamaño \n");
                     }
                     else if(buff_rx->data == 1){
-                        write(sockfd, buff_tx, sizeof(buff_tx));
+                        printf("op 2 \n");
+                        
+                        write(connfd, buff_tx.control.data(), buff_tx.control.size());
                     }
                 }
             }

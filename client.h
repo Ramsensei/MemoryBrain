@@ -32,12 +32,12 @@ private:
 public:
     preData* packSize;
     preData* buff_tx;
-    Data* buff_rx;
+    Data buff_rx;
     
     Client(std::string ip, int port);
-    void setMessage();
-    void sendMessage();
-    void setSize();
+    void setMessage(int message);
+    void getImage();
+    void getSize();
 };
 
 #endif

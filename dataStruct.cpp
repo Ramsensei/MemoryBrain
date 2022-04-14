@@ -4,6 +4,7 @@
 struct preData
 {
     int data;
+    int value;
 };
 struct Data
 {
