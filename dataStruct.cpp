@@ -1,4 +1,3 @@
-#include <wx/wx.h>
 #include <string>
 
 struct preData

@@ -1,18 +1,41 @@
-#include <string>
-#include <iostream>
-#include <fstream>
+#include <stdio.h>
+#include <sys/types.h>
+#include <ifaddrs.h>
+#include <netinet/in.h>
 #include <string.h>
+#include <arpa/inet.h>
+#include <cstdlib>
 
-using namespace std;
+char* getHost()
+{
+   struct ifaddrs *ifAddrStruct = NULL;
+   struct ifaddrs *ifa = NULL;
+   void *tmpAddrPtr = NULL;
+   getifaddrs(&ifAddrStruct);
+   for (ifa = ifAddrStruct; ifa != NULL; ifa = ifa->ifa_next)
+   {
 
-int main () {
-    string str = "Lorem ipsum dolor sit amet, cons";
-    char* cstr = (char *) malloc(30000);
-    char a = 's';
-    cstr[0] = a;
-    cstr[1] = '\n';
-    cstr[2] = 't';
-    cstr[3] = '\n';
-    cstr[4] = 'l';
-    cout<<cstr<<endl;
+      if (ifa->ifa_addr->sa_family == AF_INET)
+      {
+         // check it is IP4
+         // is a valid IP4 Address
+         tmpAddrPtr = &((struct sockaddr_in *)ifa->ifa_addr)->sin_addr;
+         char addressBuffer[INET_ADDRSTRLEN];
+         inet_ntop(AF_INET, tmpAddrPtr, addressBuffer, INET_ADDRSTRLEN);
+         if (strcmp(ifa->ifa_name, "wlan0") == 0)
+         {
+            // printf("%s IP Address %s\n", ifa->ifa_name, addressBuffer);
+            char* ip = (char*)malloc(sizeof(char)*INET_ADDRSTRLEN);
+            strcpy(ip, addressBuffer);
+            return ip;
+         }
+      }
+   }
+}
+
+int main(int argc, const char *argv[])
+{
+   char *host = getHost();
+   printf("%s\n",host);
+   return 0;
 }

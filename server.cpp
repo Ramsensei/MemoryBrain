@@ -15,15 +15,19 @@
 #include <errno.h>
 #include <stdio.h>
 #include <string.h>
+#include <stdio.h>
+#include <sys/types.h>
+#include <ifaddrs.h>
+#include <netinet/in.h>
+#include <string.h>
+#include <arpa/inet.h>
+#include <cstdlib>
 
-#define IP_SERV_ADDR "192.168.0.39"
-
-Server::Server(std::string ip, int port)
+Server::Server(int port)
 {
-    SERVER_IP = ip;
     PORT = port;
     len = sizeof(client);
-    CHAR_IP = const_cast<char *>(SERVER_IP.c_str());
+    CHAR_IP = getHost();
 
     buff_tx = Data();
     buff_rx = (preData *)malloc(sizeof(preData));
@@ -99,7 +103,7 @@ void Server::start()
                     {
                         printf("op 1 \n");
                         image *img = new image();
-                        std::string path = "assets/aguacate.png";
+                        std::string path = "assets/"+std::to_string(buff_rx->value)+".png";
                         img->encodeImage(path);
                         buff_tx.control = img->img;
                         delete img;
@@ -119,4 +123,33 @@ void Server::start()
             close(connfd);
         }
     }
+}
+
+char* Server::getHost()
+{
+   struct ifaddrs *ifAddrStruct = NULL;
+   struct ifaddrs *ifa = NULL;
+   void *tmpAddrPtr = NULL;
+   getifaddrs(&ifAddrStruct);
+   for (ifa = ifAddrStruct; ifa != NULL; ifa = ifa->ifa_next)
+   {
+
+      if (ifa->ifa_addr->sa_family == AF_INET)
+      {
+         // check it is IP4
+         // is a valid IP4 Address
+         tmpAddrPtr = &((struct sockaddr_in *)ifa->ifa_addr)->sin_addr;
+         char addressBuffer[INET_ADDRSTRLEN];
+         inet_ntop(AF_INET, tmpAddrPtr, addressBuffer, INET_ADDRSTRLEN);
+         if (strcmp(ifa->ifa_name, "wlan0") == 0)
+         {
+            // printf("%s IP Address %s\n", ifa->ifa_name, addressBuffer);
+            char* ip = (char*)malloc(sizeof(char)*INET_ADDRSTRLEN);
+            strcpy(ip, addressBuffer);
+            return ip;
+         }
+      }
+   }
+   char *ret = (char *)"Null";
+   return ret;
 }

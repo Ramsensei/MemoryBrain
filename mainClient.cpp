@@ -2,7 +2,7 @@
 #include "client.cpp"
 
 int main(int argc, char *argv[]){
-    std::string ip = "192.168.0.17";
+    std::string ip = "192.168.0.49";
     Client* s = new Client(ip, 8080);
     s->setMessage(stoi(argv[1]));
     s->getSize();

@@ -42,7 +42,7 @@ int image::decodeImage(){
 
     }
     cout<<"ReLoaded Successfully"<<endl;
-    image.clear();
+    image.close();
     // binary.close();
     return 0;
 }

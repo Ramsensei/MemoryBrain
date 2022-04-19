@@ -9,6 +9,7 @@
 #include <netinet/in.h>
 #include <sys/socket.h>
 #include <sys/types.h>
+#include <ifaddrs.h>
 #include <arpa/inet.h>
 
 /* strings / errors*/
@@ -16,11 +17,12 @@
 #include <stdio.h>
 #include <string.h>
 
-Client::Client(std::string ip, int port)
+
+#include <cstdlib>
+Client::Client(int port)
 {
-    SERVER_IP = ip;
     PORT = port;
-    CHAR_IP = const_cast<char *>(SERVER_IP.c_str());
+    CHAR_IP = getHost();
     buff_rx = Data();
     buff_tx = (preData *)malloc(sizeof(preData));
     packSize = (preData *)malloc(sizeof(preData));
@@ -63,6 +65,8 @@ void Client::getImage()
     char* temp = (char*)malloc(sizeof(char) * packSize->data);
     len_rx = read(sockfd, temp, packSize->data);
     std::cout<<"len_rx: "<<len_rx<<std::endl;
+
+    buff_rx.control.clear();
     /* copy image to buff_rx*/
     for(int i = 0; i < len_rx; i++){
         buff_rx.control.push_back(*(temp+i));
@@ -151,4 +155,33 @@ void Client::getSize()
 
 void Client::setMessage(int message){
     buff_tx->value = message;
+}
+
+char* Client::getHost()
+{
+   struct ifaddrs *ifAddrStruct = NULL;
+   struct ifaddrs *ifa = NULL;
+   void *tmpAddrPtr = NULL;
+   getifaddrs(&ifAddrStruct);
+   for (ifa = ifAddrStruct; ifa != NULL; ifa = ifa->ifa_next)
+   {
+
+      if (ifa->ifa_addr->sa_family == AF_INET)
+      {
+         // check it is IP4
+         // is a valid IP4 Address
+         tmpAddrPtr = &((struct sockaddr_in *)ifa->ifa_addr)->sin_addr;
+         char addressBuffer[INET_ADDRSTRLEN];
+         inet_ntop(AF_INET, tmpAddrPtr, addressBuffer, INET_ADDRSTRLEN);
+         if (strcmp(ifa->ifa_name, "wlan0") == 0)
+         {
+            // printf("%s IP Address %s\n", ifa->ifa_name, addressBuffer);
+            char* ip = (char*)malloc(sizeof(char)*INET_ADDRSTRLEN);
+            strcpy(ip, addressBuffer);
+            return ip;
+         }
+      }
+   }
+   char *ret = (char *)"Null";
+   return ret;
 }

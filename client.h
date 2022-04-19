@@ -21,7 +21,6 @@
 class Client {
 private:
     static const int BUFF_SIZE = 1024;
-    std::string SERVER_IP;
     const char* CHAR_IP;
     int PORT;
 
@@ -34,10 +33,11 @@ public:
     preData* buff_tx;
     Data buff_rx;
     
-    Client(std::string ip, int port);
+    Client(int port);
     void setMessage(int message);
     void getImage();
     void getSize();
+    char* getHost();
 };
 
 #endif

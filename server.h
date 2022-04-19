@@ -24,7 +24,6 @@ class Server{
         static const int BUFF_SIZE = 100;
         static const int BACKLOG = 5;
 
-        std::string SERVER_IP;
         const char* CHAR_IP;
         int PORT;
 
@@ -38,8 +37,9 @@ class Server{
         preData* packSize;
     
     public:
-        Server(std::string ip, int port);
+        Server(int port);
         void start();
+        char* getHost();
 
 };
 

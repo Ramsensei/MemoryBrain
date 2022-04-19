@@ -33,6 +33,16 @@ public:
     {
         return size;
     }
+    wxBitmapButton* getButton(int id)
+    {
+        int index = (((id-(id%10))/10) - 1)*6 + id%10 - 1;
+        Node *temp = head;
+        for (int i = 0; i < index; i++)
+        {
+            temp = temp->next;
+        }
+        return temp->data;
+    }
     void push(wxBitmapButton *new_data)
     {
         /* 1. allocate node */
