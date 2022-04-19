@@ -9,10 +9,10 @@ using namespace std;
 image::image(){
 }
 
-int image::encodeImage(std::string picture){
+int image::encodeImage(std::string picture){ // picture example: assets/1.png
     ifstream image(picture, ios::in | ios::binary);
     // ofstream binary("binary_image.txt", ios::out | ios::trunc);
-
+    
     while(!image.eof())
     {
         ch = image.get();

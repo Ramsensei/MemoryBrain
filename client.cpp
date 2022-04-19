@@ -56,17 +56,20 @@ void Client::getImage()
     printf("connected to the server..\n");
 
     buff_tx->data = 1;
-    /* send test sequences*/
-    write(sockfd, buff_tx, sizeof(buff_tx));
+    /* send petition to server*/
+    write(sockfd, buff_tx, sizeof(buff_tx)); 
+
+    /* receive image in temp*/
     char* temp = (char*)malloc(sizeof(char) * packSize->data);
     len_rx = read(sockfd, temp, packSize->data);
-    printf("----------------------Inicio do pacote----------------------\n");
+    std::cout<<"len_rx: "<<len_rx<<std::endl;
+    /* copy image to buff_rx*/
     for(int i = 0; i < len_rx; i++){
         buff_rx.control.push_back(*(temp+i));
     }
-    std::cout << "Control: " << buff_rx.control << std::endl;
-    printf("\n");
-    printf("----------------------Fim do pacote----------------------\n");
+    // std::cout << "Control: " << buff_rx.control << std::endl;
+    delete temp;
+    temp = nullptr;
 
     if (len_rx == -1)
     {
@@ -79,6 +82,8 @@ void Client::getImage()
     else
     {
         // fprintf(stdout, "Mensaje recibido: %s \n", buff_rx.control);
+
+        /* build the image */
         image* img = new image();
         img->decodeImage(buff_rx.control);
         delete img;
