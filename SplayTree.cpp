@@ -7,7 +7,7 @@ class node
 {
 public:
     int key;
-    card data;
+    card *data;
     node *left, *right;
 };
 class SplayTree
@@ -23,10 +23,10 @@ public:
     /* Helper function that allocates
     a new node with the given key and
         NULL left and right pointers. */
-    node *newNode(card d)
+    node *newNode(card *d)
     {
         node *Node = new node();
-        Node->key = d.id;
+        Node->key = d->id;
         Node->data = d;
         Node->left = Node->right = NULL;
         return (Node);
@@ -130,9 +130,9 @@ public:
 
     // Function to insert a new key k
     // in splay tree with given root
-    node *insert(card c)
+    node *insert(card *c)
     {
-        int k = c.id;
+        int k = c->id;
         // Simple Case: If tree is empty
         if (root == NULL)
         {
@@ -183,17 +183,17 @@ public:
     {
         if (root != NULL)
         {
-            cout << root->key << " ";
+            cout << "("<<root->key << ", " << root->data->type << ") "<< endl;
             preOrder(root->left);
             preOrder(root->right);
         }
     }
 
-    node *search(int key)
+    card *search(int key)
     {
         root = splay(root, key);
         if (root->key == key)
-            return root;
+            return root->data;
         else
             return NULL;
     }

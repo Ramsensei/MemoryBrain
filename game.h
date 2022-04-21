@@ -1,11 +1,11 @@
-#ifndef Game.h
-#define Game.h
-#include "SplayTree.cpp"
+#ifndef GAME_H
+#define GAME_H
+#include "memoryManager.cpp"
 
 class game
 {
 private:
-    SplayTree deck;
+    memoryManager *deck;
 
 public:
     game();

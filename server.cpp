@@ -1,5 +1,4 @@
 #include "server.h"
-#include "image.cpp"
 
 /*standard symbols */
 #include <unistd.h>

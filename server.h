@@ -1,7 +1,9 @@
 #ifndef SERVER_H
 #define SERVER_H
 
-#include "dataStruct.cpp"
+#include "game.cpp"
+// #include "dataStruct.cpp"
+// #include "image.cpp"
 
 /*standard symbols */
 #include <unistd.h>  
@@ -30,6 +32,8 @@ class Server{
         int sockfd, connfd;
         unsigned int len;
         struct sockaddr_in servaddr, client;
+
+        game *board;
         
         int  len_rx, len_tx = 0;
         Data buff_tx;

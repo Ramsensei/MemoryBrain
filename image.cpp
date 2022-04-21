@@ -19,7 +19,7 @@ int image::encodeImage(std::string picture){ // picture example: assets/1.png
         // binary.put(ch);
         img.push_back(ch);
     }
-    cout<<"Loaded Successfully"<<endl;
+    // cout<<"Loaded Successfully"<<endl;
     // cout<<picture<<endl;
 
     image.close();
@@ -41,7 +41,7 @@ int image::decodeImage(){
         img = img.substr(1);
 
     }
-    cout<<"ReLoaded Successfully"<<endl;
+    // cout<<"ReLoaded Successfully"<<endl;
     image.close();
     // binary.close();
     return 0;
