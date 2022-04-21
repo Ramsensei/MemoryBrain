@@ -67,6 +67,7 @@ Server::Server(int port)
     }
     else
         printf("[SERVER]: Listening on SERV_PORT %d \n\n", ntohs(servaddr.sin_port));
+    board = new game();
     this->start();
 }
 
@@ -100,20 +101,15 @@ void Server::start()
                 {
                     if (buff_rx->data == 0)
                     {
-                        printf("op 1 \n");
-                        image *img = new image();
-                        std::string path = "assets/"+std::to_string(buff_rx->value)+".png";
-                        img->encodeImage(path);
-                        buff_tx.control = img->img;
-                        delete img;
-                        img = nullptr;
-                        packSize->data = buff_tx.control.size();
+                        int id = buff_rx->value;
+                        packSize->data = board->getSize(id);
+                        packSize->value = board->update(id);
+                        buff_tx.control = board->getImage(id);
                         write(connfd, packSize, sizeof(packSize));
                         printf("Envio de tamaño \n");
                     }
                     else if (buff_rx->data == 1)
                     {
-                        printf("op 2 \n");
 
                         write(connfd, buff_tx.control.data(), buff_tx.control.size());
                     }

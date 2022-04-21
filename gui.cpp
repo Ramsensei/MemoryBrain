@@ -45,13 +45,13 @@ void GUI::OnClick(wxCommandEvent &event)
 {
     int id = event.GetId();
 
-    client->setMessage((id % 8) + 1);
+    client->setMessage(id);
     client->getSize();
     message = client->getMessage();
 
+    std::cout << "Click" << std::endl;
     client->getImage();
 
-    std::cout << "Click" << std::endl;
 
     buttons.getButton(id)->SetBitmapLabel(wxBitmap("rebuild.png", wxBITMAP_TYPE_PNG));
     buttons.getButton(id)->Enable(false);

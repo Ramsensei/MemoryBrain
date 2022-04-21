@@ -6,9 +6,15 @@ class game
 {
 private:
     memoryManager *deck;
+    int cardsFlipped;
+    int lastCard;
 
 public:
     game();
+    int getSize(int id);
+    int update(int id);
+    string getImage(int id);
+
     
 };
 
