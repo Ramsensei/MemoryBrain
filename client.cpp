@@ -17,7 +17,6 @@
 #include <stdio.h>
 #include <string.h>
 
-
 #include <cstdlib>
 Client::Client(int port)
 {
@@ -59,17 +58,18 @@ void Client::getImage()
 
     buff_tx->data = 1;
     /* send petition to server*/
-    write(sockfd, buff_tx, sizeof(buff_tx)); 
+    write(sockfd, buff_tx, sizeof(buff_tx));
 
     /* receive image in temp*/
-    char* temp = (char*)malloc(sizeof(char) * packSize->data);
+    char *temp = (char *)malloc(sizeof(char) * packSize->data);
     len_rx = read(sockfd, temp, packSize->data);
-    std::cout<<"len_rx: "<<len_rx<<std::endl;
+    std::cout << "len_rx: " << len_rx << std::endl;
 
     buff_rx.control.clear();
     /* copy image to buff_rx*/
-    for(int i = 0; i < len_rx; i++){
-        buff_rx.control.push_back(*(temp+i));
+    for (int i = 0; i < len_rx; i++)
+    {
+        buff_rx.control.push_back(*(temp + i));
     }
     // std::cout << "Control: " << buff_rx.control << std::endl;
     delete temp;
@@ -79,7 +79,8 @@ void Client::getImage()
     {
         fprintf(stderr, "[CLIENT-error]: connfd cannot be read. %d: %s \n", errno, strerror(errno));
     }
-    else if (len_rx == 0){
+    else if (len_rx == 0)
+    {
         printf("[CLIENT]: client socket closed \n\n");
         // break;
     }
@@ -88,13 +89,11 @@ void Client::getImage()
         // fprintf(stdout, "Mensaje recibido: %s \n", buff_rx.control);
 
         /* build the image */
-        image* img = new image();
+        image *img = new image();
         img->decodeImage(buff_rx.control);
         delete img;
         img = nullptr;
     }
-
-    
 
     /* close the socket */
     close(sockfd);
@@ -138,7 +137,8 @@ void Client::getSize()
     {
         fprintf(stderr, "[CLIENT-error]: connfd cannot be read. %d: %s \n", errno, strerror(errno));
     }
-    else if (len_rx == 0){
+    else if (len_rx == 0)
+    {
         printf("[CLIENT]: client socket closed \n\n");
         // break;
     }
@@ -147,41 +147,44 @@ void Client::getSize()
         fprintf(stdout, "Mensaje recibido: %d \n", packSize->data);
     }
 
-    
-
     /* close the socket */
     close(sockfd);
 }
 
-void Client::setMessage(int message){
+void Client::setMessage(int message)
+{
     buff_tx->value = message;
 }
 
-char* Client::getHost()
-{
-   struct ifaddrs *ifAddrStruct = NULL;
-   struct ifaddrs *ifa = NULL;
-   void *tmpAddrPtr = NULL;
-   getifaddrs(&ifAddrStruct);
-   for (ifa = ifAddrStruct; ifa != NULL; ifa = ifa->ifa_next)
-   {
+int Client::getMessage() {
+    return packSize->value;
+}
 
-      if (ifa->ifa_addr->sa_family == AF_INET)
-      {
-         // check it is IP4
-         // is a valid IP4 Address
-         tmpAddrPtr = &((struct sockaddr_in *)ifa->ifa_addr)->sin_addr;
-         char addressBuffer[INET_ADDRSTRLEN];
-         inet_ntop(AF_INET, tmpAddrPtr, addressBuffer, INET_ADDRSTRLEN);
-         if (strcmp(ifa->ifa_name, "wlan0") == 0)
-         {
-            // printf("%s IP Address %s\n", ifa->ifa_name, addressBuffer);
-            char* ip = (char*)malloc(sizeof(char)*INET_ADDRSTRLEN);
-            strcpy(ip, addressBuffer);
-            return ip;
-         }
-      }
-   }
-   char *ret = (char *)"Null";
-   return ret;
+char *Client::getHost()
+{
+    struct ifaddrs *ifAddrStruct = NULL;
+    struct ifaddrs *ifa = NULL;
+    void *tmpAddrPtr = NULL;
+    getifaddrs(&ifAddrStruct);
+    for (ifa = ifAddrStruct; ifa != NULL; ifa = ifa->ifa_next)
+    {
+
+        if (ifa->ifa_addr->sa_family == AF_INET)
+        {
+            // check it is IP4
+            // is a valid IP4 Address
+            tmpAddrPtr = &((struct sockaddr_in *)ifa->ifa_addr)->sin_addr;
+            char addressBuffer[INET_ADDRSTRLEN];
+            inet_ntop(AF_INET, tmpAddrPtr, addressBuffer, INET_ADDRSTRLEN);
+            if (strcmp(ifa->ifa_name, "wlan0") == 0)
+            {
+                // printf("%s IP Address %s\n", ifa->ifa_name, addressBuffer);
+                char *ip = (char *)malloc(sizeof(char) * INET_ADDRSTRLEN);
+                strcpy(ip, addressBuffer);
+                return ip;
+            }
+        }
+    }
+    char *ret = (char *)"Null";
+    return ret;
 }

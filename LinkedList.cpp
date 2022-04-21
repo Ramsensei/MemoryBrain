@@ -33,9 +33,8 @@ public:
     {
         return size;
     }
-    wxBitmapButton* getButton(int id)
+    wxBitmapButton* getIndex(int index)
     {
-        int index = (((id-(id%10))/10) - 1)*6 + id%10 - 1;
         Node *temp = head;
         for (int i = 0; i < index; i++)
         {
@@ -43,6 +42,13 @@ public:
         }
         return temp->data;
     }
+
+    wxBitmapButton* getButton(int id)
+    {
+        int index = (((id-(id%10))/10) - 1)*6 + id%10 - 1;
+        return getIndex(index);
+    }
+    
     void push(wxBitmapButton *new_data)
     {
         /* 1. allocate node */
@@ -104,6 +110,7 @@ public:
         if (head == nullptr)
         {
             head = new_node;
+            size++;
             return;
         }
 
@@ -120,6 +127,18 @@ public:
         return;
     }
 
+    void clear()
+    {
+        Node *temp = head;
+        while (temp != nullptr)
+        {
+            Node *next = temp->next;
+            delete temp;
+            temp = next;
+        }
+        head = nullptr;
+        size = 0;
+    }
     // void printList()
     // {
     //     Node *node = (head);

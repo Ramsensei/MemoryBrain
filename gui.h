@@ -12,10 +12,13 @@ private:
     wxBitmapButton* btnImg;
     Client* client;
     LinkedList buttons;
+    LinkedList lastButtons;
+    int message;
 public:
     GUI(const wxString& title);
     void changeImg(wxCommandEvent & event);
     void OnClick(wxCommandEvent & event);
+    void handleMessage();
 };
 
 const int ID_BTNIMG = 20;

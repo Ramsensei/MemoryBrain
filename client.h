@@ -37,6 +37,7 @@ public:
     void setMessage(int message);
     void getImage();
     void getSize();
+    int getMessage();
     char* getHost();
 };
 
