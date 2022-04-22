@@ -8,6 +8,7 @@ private:
     memoryManager *deck;
     int cardsFlipped;
     int lastCard;
+    int pairsFound;
 
 public:
     game();

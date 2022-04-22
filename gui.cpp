@@ -77,5 +77,9 @@ void GUI::handleMessage()
         wxMessageBox(wxT("Bien Hecho"));
         lastButtons.clear();
         break;
+    case 3:
+        wxMessageBox(wxT("Juego Terminado"));
+        exit(1);
+        break;
     }
 }

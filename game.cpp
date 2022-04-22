@@ -6,6 +6,7 @@ game::game()
     deck = new memoryManager();
     cardsFlipped = 0;
     lastCard = 0;
+    pairsFound = 0;
 }
 
 int game::getSize(int id)
@@ -23,6 +24,7 @@ int game::update(int id)
         {
             printf("[GAME]: Match found\n");
             returnValue = 2;
+            pairsFound++;
         }
         else
         {
@@ -32,6 +34,12 @@ int game::update(int id)
         cardsFlipped = 0;
     }
     lastCard = id;
+    if (pairsFound >= 18)
+    {
+        printf("[GAME]: Game finished\n");
+        returnValue = 3;
+    }
+
     return returnValue;
 }
 
