@@ -10,6 +10,7 @@ private:
 public:
     memoryManager();
     card *getCard(int id);
+    void flipCards(int id1, int id2);
 };
 
 

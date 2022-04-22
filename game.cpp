@@ -23,6 +23,7 @@ int game::update(int id)
         if (deck->getCard(id)->type == deck->getCard(lastCard)->type)
         {
             printf("[GAME]: Match found\n");
+            deck->flipCards(id, lastCard);
             returnValue = 2;
             pairsFound++;
         }

@@ -1,4 +1,5 @@
 #include <bits/stdc++.h>
+#include <cstdio>
 #include "dataStruct.cpp"
 using namespace std;
 
@@ -183,12 +184,30 @@ public:
     {
         if (root != NULL)
         {
-            cout << "("<<root->key << ", " << root->data->type << ") "<< endl;
+            cout << "(" << root->key << ", " << root->data->type << ") " << endl;
             preOrder(root->left);
             preOrder(root->right);
         }
     }
-
+    void Alola(node *a, int espacios = 0)
+    {
+        if (a != NULL)
+        {
+            if (a->left)
+            {
+                Alola(a->left, espacios + 4);
+            }
+            if (a->right)
+            {
+                Alola(a->right, espacios + 4);
+            }
+            if (espacios)
+            {
+                std::cout << std::setw(espacios) << ' ';
+            }
+            cout << a->key << "\n ";
+        }
+    }
     card *search(int key)
     {
         root = splay(root, key);
@@ -197,32 +216,73 @@ public:
         else
             return NULL;
     }
+
+    card *findLast()
+    {
+        std::string path = getMayorPath();
+        while (path.size() > 0)
+        {
+            int key = std::stoi(path.substr(0, path.find(".")));
+            path = path.substr(path.find(".") + 1);
+            root = splay(root, key);
+        }
+        
+    }
+
+    std::string getMayorPath()
+    {
+        return getMayorPath(this->root);
+    }
+
+    std::string getMayorPath(node *root, std::string path = "")
+    {
+        if (root == NULL)
+            return "";
+        if (root->left == NULL && root->right == NULL)
+            return path;
+        if (root->left == NULL)
+            return getMayorPath(root->right, path + "r");
+        if (root->right == NULL)
+            return getMayorPath(root->left, path + "l");
+
+        std::string left = getMayorPath(root->left, path + "l");
+        std::string right = getMayorPath(root->right, path + "r");
+
+        if (left.size() > right.size())
+            return left;
+        else
+            return right;
+    }
 };
 /* Driver code*/
 // int main()
 // {
 //     SplayTree tree = SplayTree();
-//     card c = card();
-//     c.id = 11;
-//     c.type = 3;
-//     c.status = 3;
-//     c.img = "img";
+//     card *c = new card();
+//     c->id = 11;
+//     c->type = 3;
+//     c->status = 3;
+//     c->img = "img";
 //     tree.insert(c);
-//     c.id = 12;
+//     c->id = 12;
 //     tree.insert(c);
-//     c.id = 13;
+//     c->id = 13;
 //     tree.insert(c);
-//     c.id = 24;
+//     c->id = 24;
 //     tree.insert(c);
-//     c.id = 32;
+//     c->id = 32;
 //     tree.insert(c);
-//     c.id = 63;
+//     c->id = 63;
 //     tree.insert(c);
-//     c.id = 34;
+//     c->id = 34;
 //     tree.insert(c);
 //     tree.search(13);
+//     tree.search(63);
+//     tree.search(24);
 //     cout << "Preorder traversal of the modified Splay tree is \n";
-//     tree.preOrder();
+//     tree.Alola(tree.root);
+//     cout << endl
+//          << tree.getMayorPath() << endl;
+    
 //     return 0;
 // }
-
