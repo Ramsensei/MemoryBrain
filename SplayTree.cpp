@@ -217,16 +217,52 @@ public:
             return NULL;
     }
 
-    card *findLast()
+    node *findLast(int prevNode = 0, std::string path = "")
+    {
+        if (path == "")
+            std::string path = getMayorPath();
+        node *temp = root;
+        while (path.size() > prevNode)
+        {
+            if (path.substr(0, 1) == "r")
+            {
+                temp = temp->right;
+            }
+            else
+            {
+                temp = temp->left;
+            }
+            path = path.substr(1);
+        }
+        return temp;
+    }
+
+    void replaceLast(card *c)
+    {
+        deleteLast();
+        insert(c);
+    }
+
+    void deleteLast()
     {
         std::string path = getMayorPath();
-        while (path.size() > 0)
+        char step = path.back();
+
+        node *aux = findLast(1, path);
+        node *toDel = NULL;
+
+        if (step == 'r')
         {
-            int key = std::stoi(path.substr(0, path.find(".")));
-            path = path.substr(path.find(".") + 1);
-            root = splay(root, key);
+            toDel = aux->right;
+            aux->right = NULL;
         }
-        
+        else
+        {
+            toDel = aux->left;
+            aux->left = NULL;
+        }
+        delete toDel;
+        toDel = nullptr;
     }
 
     std::string getMayorPath()
@@ -279,10 +315,14 @@ public:
 //     tree.search(13);
 //     tree.search(63);
 //     tree.search(24);
+//     c->id = 90;
 //     cout << "Preorder traversal of the modified Splay tree is \n";
 //     tree.Alola(tree.root);
-//     cout << endl
-//          << tree.getMayorPath() << endl;
-    
+//     tree.replaceLast(c);
+//     cout << "Preorder traversal of the modified Splay tree is \n";
+//     tree.Alola(tree.root);
+//     tree.deleteLast();
+//     cout << "Preorder traversal of the modified Splay tree is \n";
+//     tree.Alola(tree.root);
 //     return 0;
 // }
